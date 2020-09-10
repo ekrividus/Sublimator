@@ -1,1 +1,4 @@
-data/settings.xml
+#ignored folders: 
+/data/
+
+#ignored files:

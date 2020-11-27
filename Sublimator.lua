@@ -111,11 +111,15 @@ function show_help()
 end
 
 function show_status()
-    windower.add_to_chat(17, _addon.name..": Status ~~~~~~~~~\nMPP: "
-        ..(settings[main_job] ~= nil and settings[main_job].mpp_low or settings.mpp_low)
-        ..(settings[main_job] ~= nil and settings[main_job].mp_missing or settings.mp_missing)
-        ..(settings[main_job] ~= nil and settings[main_job].min_charge_seconds or settings.min_charge_seconds)
-        ..(settings[main_job] ~= nil and settings[main_job].full_only or settings.full_only)
+    windower.add_to_chat(17, "   ~~~~~ ".._addon.name.." Status - "..(active and "Running" or "Stopped").. " ~~~~~\n"
+    .."\nUse only when fully charged? "
+    ..(settings[main_job] ~= nil and tostring(settings[main_job].full_only) or tostring(settings.full_only))
+    .."\nWhen not fully charged:\n\tIf charge time elapsed is more than: "
+    ..(settings[main_job] ~= nil and settings[main_job].min_charge_seconds or settings.min_charge_seconds) .. " seconds"
+    .."\nand MP % below: "
+    ..(settings[main_job] ~= nil and settings[main_job].mpp_low or settings.mpp_low)
+    .." -or- MP Mising >= "
+    ..(settings[main_job] ~= nil and settings[main_job].mp_missing or settings.mp_missing)
     )
 end
 

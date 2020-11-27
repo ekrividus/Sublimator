@@ -7,6 +7,7 @@ Automatically turns off when zoning or changing jobs, don't forget to turn it ba
   
 ## Command: sublimator or sublimate
 no argument - toggles sublimation management  
+show - Display current settings
 start|stop - starts|stops sublimation management  
 save - saves current settings for main job  
 help - shows some help text  

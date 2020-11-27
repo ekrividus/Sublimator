@@ -159,7 +159,7 @@ windower.register_event('prerender', function(...)
                 end
                 windower.send_command('input /ja "Sublimation" <me>')
                 return
-            elseif (buffs[187] and not full_only and (charge_time + min_charge_seconds/1000 < time) and recasts[234] == 0) then
+            elseif (buffs[187] and not full_only and (charge_time + min_charge_seconds*1000 < time) and recasts[234] == 0) then
                 if (settings.verbose) then
                     windower.add_to_chat(17, _addon.name..": Sublimation for MP - Not Full")
                 end

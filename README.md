@@ -7,12 +7,15 @@ Automatically turns off when zoning or changing jobs, don't forget to turn it ba
   
 ## Command: sublimator or sublimate
 no argument - toggles sublimation management  
-show - Display current settings
-start|stop - starts|stops sublimation management  
-save - saves current settings for main job  
-help - shows some help text  
-mpp - sets MP percent to use sublimation at or below  
-missing - sets amount of missing mp to use sublimation at or below  
-full [true|false] - sets (toggles if no option given) whether or not to always wait for full charge  
-charge - sets the seconds before sublimation can be used, when full is not on  
-verbose - toggles extra info  
+* show - Display current settings
+* start|stop - starts|stops sublimation management  
+* save - saves current settings for main job  
+* help - shows some help text  
+* mpp - sets MP percent to use sublimation at or below  
+* mising - sets amount of missing mp to use sublimation at or below  
+* full [true|false] - sets (toggles if no option given) whether or not to always wait for full charge  
+* charge - sets the seconds before sublimation can be used, when full is not on
+  * Default 300 seconds (5 mins)
+*  zone - toggles disabling when zoning
+   * Default off  
+* verbose - toggles extra info  

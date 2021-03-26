@@ -50,11 +50,13 @@ defaults.debug = false -- Show debug output
 defaults.mp_missing = 600 -- Use when missing this many MP
 defaults.mpp_low = 30 -- Or use if MP falls below this point
 defaults.full_only = true -- Only use when MP full
-defaults.min_charge_seconds = 90 -- Minimum time in seconds
+defaults.min_charge_seconds = 300 -- Minimum time in seconds (300 is 5 mins.)
 defaults.delay = 1 -- seconds between MP checks
 defaults.verbose = true -- Spam your chat with details
+defaults.disable_on_zone = false -- Whether or not to disable on zoning
 
 settings = config.load(defaults)
+
 local player = windower.ffxi.get_player()
 local buffs = T{}
 local recasts = T{}
@@ -62,6 +64,38 @@ local last_check_time = 0
 local charge_time = 0
 local main_job = nil
 local active = true
+local zone_pause = 30
+local paused = 0
+
+-- Zones where Sublimator will not try to activate, add/remove as you see fit
+local Cities = S{
+    "Northern San d'Oria", "Southern San d'Oria", "Port San d'Oria", "Chateau d'Oraguille",
+    "Bastok Markets", "Bastok Mines", "Port Bastok", "Metalworks",
+    "Windurst Walls", "Windurst Waters", "Windurst Woods", "Port Windurst", "Heavens Tower",
+    "Ru'Lude Gardens", "Upper Jeuno", "Lower Jeuno", "Port Jeuno",
+    --"Selbina", "Mhaura", "Kazham", "Norg", "Rabao", "Tavnazian Safehold",
+    "Aht Urhgan Whitegate", "Al Zahbi", "Nashmau",
+    "Southern San d'Oria (S)", "Bastok Markets (S)", "Windurst Waters (S)",
+    "Western Adoulin", "Eastern Adoulin", "Celennia Memorial Library",
+    "Bastok-Jeuno Airship", "Kazham-Jeuno Airship", "San d'Oria-Jeuno Airship", "Windurst-Jeuno Airship",
+    "Ship bound for Mhaura", "Ship bound for Selbina", "Open sea route to Al Zahbi", "Open sea route to Mhaura",
+    "Silver Sea route to Al Zahbi", "Silver Sea route to Nashmau", "Manaclipper", "Phanauet Channel",
+    "Chocobo Circuit", "Feretory", "Mog Garden",
+}
+
+--TODO: Add checks for statuses that disallow use of JAs
+function is_disabled() 
+    return false
+end
+
+-- returns true if current zone is a city or town.
+function in_town()
+    local zone = res.zones[windower.ffxi.get_info().zone].en
+    if Cities:contains(zone) then
+        return true
+    end
+    return false
+end
 
 function get_buffs(player)
     local l = T{}
@@ -101,6 +135,7 @@ function show_help()
         Keep sublimation up and use as appropriate.
         Commands:
         save - saves current settings to your main job
+        zone - toggles whether or not to disable when zoning, off by default
         mpp <number> - sets the MP % for sublimation
         missing <number> - sets an amount of MP lost for sublimation
         full [true|false] - will only use sublmiation when full if true
@@ -127,11 +162,18 @@ windower.register_event('prerender', function(...)
     if (not active) then
         return
     end
-
-    local time = os.time()
     player = windower.ffxi.get_player()
 
-    if (player.status > 1) then
+    local time = os.time()
+    local delta_time = time - last_check_time
+    if (paused > 0) then
+        paused = paused - delta_time
+        paused = paused > 0 and paused or 0
+    end
+
+    player = windower.ffxi.get_player()
+
+    if (paused > 0 or player.status > 1) then
         return
     end
 
@@ -152,6 +194,7 @@ windower.register_event('prerender', function(...)
             min_charge_seconds = settings.min_charge_seconds
         end
 
+        if (in_town()) then return end -- Don't spam sublimation in town, especially moghouses
         if (player.vitals.mpp < mpp_low or (player.vitals.max_mp - player.vitals.mp) > mp_missing) then
             if (buffs[188] and recasts[234] == 0) then
                 if (settings.verbose) then
@@ -178,13 +221,14 @@ windower.register_event('prerender', function(...)
     end
 end)
 
-windower.register_event('load', reset)
-windower.register_event('job change', function()
-    reset()
-end)
-
+windower.register_event('load', 'login', 'job change', reset)
 windower.register_event('logout', stop)
-windower.register_event('zone change', stop)
+windower.register_event('zone change', function()
+    if (settings.disable_on_zone) then
+        stop()
+    end
+    paused = zone_pause
+end)
 
 windower.register_event('addon command', function(...)
     local cmd = ''
@@ -246,6 +290,9 @@ windower.register_event('addon command', function(...)
         if (settings.verbose) then
             windower.add_to_chat(17, _addon.name..": Minimum charge time set to "..settings[main_job].min_charge_seconds.." seconds")
         end
+	elseif (cmd == 'zone' or cmd == 'z') then
+		settings.disable_on_zone = settings.disable_on_zone and (not settings.disable_on_zone) or Trueflight
+		message("Sublimator will be "..(settings.disable_on_zone and 'enabled' or 'disabled').." when zoning.")
     elseif (cmd == 'verbose' or cmd == 'v') then
         if (#args > 0) then
             if (args[1] == 'true' or args[1] == 'on') then

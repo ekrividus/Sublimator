@@ -291,7 +291,7 @@ windower.register_event('addon command', function(...)
             windower.add_to_chat(17, _addon.name..": Minimum charge time set to "..settings[main_job].min_charge_seconds.." seconds")
         end
 	elseif (cmd == 'zone' or cmd == 'z') then
-		settings.disable_on_zone = settings.disable_on_zone and (not settings.disable_on_zone) or Trueflight
+		settings.disable_on_zone = not settings.disable_on_zone
 		windower.add_to_chat(17, "Sublimator will be "..(settings.disable_on_zone and 'enabled' or 'disabled').." when zoning.")
     elseif (cmd == 'verbose' or cmd == 'v') then
         if (#args > 0) then

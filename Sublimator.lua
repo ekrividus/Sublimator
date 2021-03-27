@@ -292,7 +292,7 @@ windower.register_event('addon command', function(...)
         end
 	elseif (cmd == 'zone' or cmd == 'z') then
 		settings.disable_on_zone = settings.disable_on_zone and (not settings.disable_on_zone) or Trueflight
-		message("Sublimator will be "..(settings.disable_on_zone and 'enabled' or 'disabled').." when zoning.")
+		windower.add_to_chat(17, "Sublimator will be "..(settings.disable_on_zone and 'enabled' or 'disabled').." when zoning.")
     elseif (cmd == 'verbose' or cmd == 'v') then
         if (#args > 0) then
             if (args[1] == 'true' or args[1] == 'on') then

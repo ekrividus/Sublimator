@@ -26,18 +26,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ]]
 
---[[
-autoMB will cast elements for magic bursts automatically
-job/level is pulled from game and appropriate elements are used
-
-single bursting only for now, but double may me introduced later
-
-]]
-_addon.version = '1.0.0'
+_addon.version = '1.1.0'
 _addon.name = 'Sublimator'
 _addon.author = 'Ekrividus'
 _addon.commands = {'sublimator','sublimate'}
-_addon.lastUpdate = '9/8/2020'
+_addon.lastUpdate = '4/04/2021'
 _addon.windower = '4'
 
 require 'tables'
@@ -49,7 +42,7 @@ defaults = T{}
 defaults.debug = false -- Show debug output
 defaults.mp_missing = 600 -- Use when missing this many MP
 defaults.mpp_low = 30 -- Or use if MP falls below this point
-defaults.full_only = true -- Only use when MP full
+defaults.full_only = true -- Only use when fully charged
 defaults.min_charge_seconds = 300 -- Minimum time in seconds (300 is 5 mins.)
 defaults.delay = 1 -- seconds between MP checks
 defaults.verbose = true -- Spam your chat with details

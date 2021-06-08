@@ -24,4 +24,4 @@ no argument - toggles sublimation management
 
 TODO:
 - [ ] Add checks for status effects (Stun, Para, Amnesia, etc.) so we don't spam the JA
-- [x] Make a toggle for disabling when zoning or not
+- [X] Make a toggle for disabling when zoning or not

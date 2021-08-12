@@ -123,7 +123,7 @@ function reset()
 end
 
 function show_help()
-    windower.add_to_chat(17, _addon.name..": Help\n"..
+    windower.add_to_chat(207, _addon.name..": Help\n"..
     [[
         Keep sublimation up and use as appropriate.
         Commands:
@@ -139,7 +139,7 @@ function show_help()
 end
 
 function show_status()
-    windower.add_to_chat(17, "   ~~~~~ ".._addon.name.." Status - "..(active and "Running" or "Stopped").. " ~~~~~\n"
+    windower.add_to_chat(207, "   ~~~~~ ".._addon.name.." Status - "..(active and "Running" or "Stopped").. " ~~~~~\n"
     .."\nUse only when fully charged? "
     ..(settings[main_job] ~= nil and tostring(settings[main_job].full_only) or tostring(settings.full_only))
     .."\nWhen not fully charged:\n\tIf charge time elapsed is more than: "
@@ -191,13 +191,13 @@ windower.register_event('prerender', function(...)
         if (player.vitals.mpp < mpp_low or (player.vitals.max_mp - player.vitals.mp) > mp_missing) then
             if (buffs[188] and recasts[234] == 0) then
                 if (settings.verbose) then
-                    windower.add_to_chat(17, _addon.name..": Sublimation for MP - Full")
+                    windower.add_to_chat(207, _addon.name..": Sublimation for MP - Full")
                 end
                 windower.send_command('input /ja "Sublimation" <me>')
                 return
             elseif (buffs[187] and not full_only and (charge_time + min_charge_seconds < time) and recasts[234] == 0) then
                 if (settings.verbose) then
-                    windower.add_to_chat(17, _addon.name..": Sublimation for MP - Not Full")
+                    windower.add_to_chat(207, _addon.name..": Sublimation for MP - Not Full")
                 end
                 windower.send_command('input /ja "Sublimation" <me>')
                 return
@@ -205,7 +205,7 @@ windower.register_event('prerender', function(...)
         end
         if ((not buffs[187] and not buffs[188]) and (not recasts[234] or recasts[234] == 0)) then
             if (settings.verbose) then
-                windower.add_to_chat(17, _addon.name..": Sublimation - Up")
+                windower.add_to_chat(207, _addon.name..": Sublimation - Up")
             end
             charge_time = time
             windower.send_command('input /ja "Sublimation" <me>')
@@ -234,34 +234,34 @@ windower.register_event('addon command', function(...)
 
     if (cmd == '') then
         active = not active
-        windower.add_to_chat(17, _addon.name..": "..(active and "Starting" or "Stopping"))
+        windower.add_to_chat(207, _addon.name..": "..(active and "Starting" or "Stopping"))
     elseif (cmd == 'start' or cmd == 'go' or cmd == 'on') then
         start()
-        windower.add_to_chat(17, _addon.name..": "..(active and "Starting" or "Stopping"))
+        windower.add_to_chat(207, _addon.name..": "..(active and "Starting" or "Stopping"))
     elseif (cmd == 'stop' or cmd == 'off') then
         stop()
-        windower.add_to_chat(17, _addon.name..": "..(active and "Starting" or "Stopping"))
+        windower.add_to_chat(207, _addon.name..": "..(active and "Starting" or "Stopping"))
     elseif (cmd == 'save') then
         settings:save(player.name)
-        windower.add_to_chat(17, _addon.name..": Saving settings for "..main_job)
+        windower.add_to_chat(207, _addon.name..": Saving settings for "..main_job)
     elseif (cmd == 'help' or cmd == 'h') then
         show_help()
     elseif (cmd == 'show' or cmd == 'status') then
         show_status()
     elseif (cmd == 'mpp') then
-        windower.add_to_chat(17, #args.." - "..args[1])
+        windower.add_to_chat(207, #args.." - "..args[1])
         if (#args > 0 and tonumber(args[1])) then
             settings[main_job].mpp_low = tonumber(args[1])
         end
         if (settings.verbose) then
-            windower.add_to_chat(17, _addon.name..": Sublimate below "..settings[main_job].mpp_low.."% MP")
+            windower.add_to_chat(207, _addon.name..": Sublimate below "..settings[main_job].mpp_low.."% MP")
         end
     elseif (cmd == 'missing' or cmd == 'miss') then
         if (#args > 0 and tonumber(args[1])) then
             settings[main_job].mp_missing = tonumber(args[1])
         end
         if (settings.verbose) then
-            windower.add_to_chat(17, _addon.name..": Sublimate if "..settings[main_job].mp_missing.." MP missing")
+            windower.add_to_chat(207, _addon.name..": Sublimate if "..settings[main_job].mp_missing.." MP missing")
         end
     elseif (cmd == 'full') then
         if (#args > 0) then
@@ -274,18 +274,18 @@ windower.register_event('addon command', function(...)
             end
         end
         if (settings.verbose) then
-            windower.add_to_chat(17, _addon.name..": Sublimate if Full Only? "..(settings[main_job].full_only and "Yes" or "No"))
+            windower.add_to_chat(207, _addon.name..": Sublimate if Full Only? "..(settings[main_job].full_only and "Yes" or "No"))
         end
     elseif (cmd == 'charge') then
         if (#args > 0 and tonumber(args[1])) then
             settings[main_job].min_charge_seconds = tonumber(args[1])
         end
         if (settings.verbose) then
-            windower.add_to_chat(17, _addon.name..": Minimum charge time set to "..settings[main_job].min_charge_seconds.." seconds")
+            windower.add_to_chat(207, _addon.name..": Minimum charge time set to "..settings[main_job].min_charge_seconds.." seconds")
         end
 	elseif (cmd == 'zone' or cmd == 'z') then
 		settings.disable_on_zone = not settings.disable_on_zone
-		windower.add_to_chat(17, "Sublimator will be "..(settings.disable_on_zone and 'enabled' or 'disabled').." when zoning.")
+		windower.add_to_chat(207, "Sublimator will be "..(settings.disable_on_zone and 'enabled' or 'disabled').." when zoning.")
     elseif (cmd == 'verbose' or cmd == 'v') then
         if (#args > 0) then
             if (args[1] == 'true' or args[1] == 'on') then
@@ -296,6 +296,6 @@ windower.register_event('addon command', function(...)
         else
             settings.verbose = not settings.verbose
         end
-        windower.add_to_chat(17, _addon.name..": Verbose output "..(settings[main_job].verbose and "On" or "Off"))
+        windower.add_to_chat(207, _addon.name..": Verbose output "..(settings[main_job].verbose and "On" or "Off"))
     end
 end)

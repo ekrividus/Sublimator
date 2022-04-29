@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 _addon.version = '1.1.0'
 _addon.name = 'Sublimator'
 _addon.author = 'Ekrividus'
-_addon.commands = {'sublimator','sublimate'}
+_addon.commands = {'sublimator','sublimate','sbl'}
 _addon.lastUpdate = '4/04/2021'
 _addon.windower = '4'
 
@@ -56,6 +56,7 @@ local recasts = T{}
 local last_check_time = 0
 local charge_time = 0
 local main_job = nil
+local sub_job = nil
 local active = true
 local zone_pause = 30
 local paused = 0
@@ -112,6 +113,8 @@ end
 function reset()
     active = false
     main_job = windower.ffxi.get_player().main_job:lower()
+    sub_job = windower.ffxi.get_player().sub_job:lower()
+
     settings = config.load(defaults)
     if (not settings[main_job]) then
         settings[main_job] = {}
@@ -152,7 +155,7 @@ function show_status()
 end
 
 windower.register_event('prerender', function(...)
-    if (not active) then
+    if (not active or (not main_job == "sch" and not sub_job == "sch")) then
         return
     end
     player = windower.ffxi.get_player()
@@ -163,8 +166,6 @@ windower.register_event('prerender', function(...)
         paused = paused - delta_time
         paused = paused > 0 and paused or 0
     end
-
-    player = windower.ffxi.get_player()
 
     if (paused > 0 or player.status > 1) then
         return
